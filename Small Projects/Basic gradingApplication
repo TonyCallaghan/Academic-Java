@@ -1,0 +1,255 @@
+import java.util.Scanner;
+
+public class gradingApplication 
+{
+	static Scanner input = new Scanner(System.in);
+	static String className;
+	static String[] names;
+	static double[] scores;
+	static String[] grades;
+	static boolean listReady = false;
+	
+	
+	public static void main(String[] args)
+	{
+		setClassSize();
+	}
+	
+	public static void reset()
+	{
+		System.out.println("Creating a new class group, will delete existing data.");
+		System.out.println("Are you sure you wish to continue. Press 'Y' for Yes or 'M' to return to Menu");
+		String choice = input.next();
+		
+		choice = choice.toLowerCase(); //Converts whatever was typed in to lower case.
+		
+		switch(choice)
+		{
+			case "y":
+			{
+				System.out.println("Reset Confirmed. Deleting data.");
+				listReady = false;
+				setClassSize();
+				break;
+			}
+			case "m":
+			{
+				System.out.println("Returning to the Menu");
+				menu();
+				break;
+			}
+			default:
+			{
+				System.out.println("Invalid choice. Please choose 'y' or 'm'");
+				break;
+			}
+		}
+		
+		
+		reset();
+	}
+	public static void setClassSize()
+	{
+		System.out.println("Please enter name of the class");
+		className = input.next();
+		
+		
+		System.out.println("How many students in the class?");
+		int sizeOfArray = input.nextInt();
+		
+		names = new String[sizeOfArray];
+		scores = new double[sizeOfArray];
+		grades = new String[sizeOfArray];
+		
+		System.out.println("Class group set up. Loading Menu");
+		menu();
+		
+	}
+	
+	public static void enterDetails()
+	{
+		System.out.println("Please enter a name and score for each student in " + className);
+	
+		for(int i=0; i < names.length; i++)
+		{
+			System.out.println("Enter student name");
+			names[i] = input.next();
+			System.out.println("Enter a score for " + names[i]);
+			scores[i] = input.nextDouble();
+		}
+		
+		System.out.println("All names and scores entered");
+		listReady = true;
+	}
+	
+	public static void calcGrade()
+	{
+		for(int i=0; i < scores.length; i++)
+		{
+			if(scores[i]<50)
+			{
+				grades[i] = "Unsuccessful"; 
+			}
+			else if(scores[i]<65)
+			{
+				grades[i] = "Pass";
+			}
+			else if(scores[i]<80)
+			{
+				grades[i] = "Merit";
+			}
+			else if(scores[i]<=100)
+			{
+				grades[i] = "Distinction";
+			}
+			else
+			{
+				grades[i] = "Invalid";
+			}
+			
+			
+			
+		}
+	}
+	
+	public static void findAverage()
+	{
+		if(listReady==false)
+		{
+			System.out.println("No students detailed entered. Please enter details");
+			menu();
+		}
+		double total = 0;
+		
+		for(int i=0; i < scores.length; i++)
+		{
+			total = total + scores[i];
+		}
+		double average = total/scores.length;
+		System.out.println("The average score for " + className + " is " + average);
+	}
+	
+	public static void printClassList()
+	{
+		if(listReady==false)
+		{
+			System.out.println("No students detailed entered. Please enter details");
+			menu();
+		}
+		calcGrade();
+		
+		System.out.println("************"+className+ " list"+"*************");
+		
+		for(int i=0; i<names.length;i++)
+		{
+			System.out.print(names[i] + "\t");
+			System.out.print(scores[i] + "\t");
+			System.out.println(grades[i]);
+		}
+		
+		System.out.println("************************************************");
+	}
+
+	public static void findMin()
+	{
+		if(listReady==false)
+		{
+			System.out.println("No students detailed entered. Please enter details");
+			menu();
+		}
+		double min = scores[0];
+		String lowName = names[0];
+		
+		for(int i=0; i < scores.length; i++)
+		{
+			if(min>scores[i])
+			{
+				min = scores[i];
+				lowName = names[i];
+			}
+			
+		}
+		System.out.println(lowName + " got the lowest score in the class with " + min);
+	}
+	public static void findMax()
+	{
+		if(listReady==false)
+		{
+			System.out.println("No students detailed entered. Please enter details");
+			menu();
+		}
+		double max = scores[0];
+		String highName = names[0];
+		
+		for(int i=0; i < scores.length; i++)
+		{
+			if(max<scores[i])
+			{
+				max = scores[i];
+				highName = names[i];
+			}
+			
+		}
+		System.out.println(highName + " got the highest score in the class with " + max);
+	}
+	public static void menu()
+	{
+		System.out.println("Press 1 to Enter Details");
+		System.out.println("Press 2 to Print Class List");
+		System.out.println("Press 3 to Find Average");
+		System.out.println("Press 4 to Find Highest Score");
+		System.out.println("Press 5 to Find Lowest Score");
+		System.out.println("Press 6 to Create a New Class Group");
+		System.out.println("Press x to Close Program");
+		
+		String choice = input.next();
+		
+		switch(choice)
+		{
+			case "1":
+			{
+				enterDetails();
+				break;
+			}
+			case "2":
+			{
+				printClassList();								
+				break;
+			}
+			case "3":
+			{
+				findAverage();
+				break;
+			}
+			case "4":
+			{
+				findMax();
+				break;
+			}
+			case "5":
+			{
+				findMin();
+				break;
+			}
+			case "6":
+			{
+				reset();
+				break;
+			}
+			case "x":
+			{
+				System.out.println("System shutting down...");
+				System.exit(0);
+			}
+			default:
+			{
+				System.out.println("Invalid Choice.");
+				break;
+			}
+		}
+		
+		
+		menu();
+	}
+
+}
